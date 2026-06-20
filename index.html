@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Screen Studio Recording Streak Tracker</title>
+<meta name="description" content="Free Screen Studio recording streak tracker with local progress saving.">
+<style>
+:root{
+--bg:#0f172a;
+--card:#1e293b;
+--line:#334155;
+--text:#f1f5f9;
+--muted:#94a3b8;
+--accent:#22c55e;
+}
+*{box-sizing:border-box}
+body{
+margin:0;
+font-family:Arial,sans-serif;
+background:var(--bg);
+color:var(--text);
+padding:20px;
+display:flex;
+flex-direction:column;
+align-items:center;
+min-height:100vh;
+}
+h1{text-align:center}
+.card{
+width:100%;
+max-width:450px;
+background:var(--card);
+border:1px solid var(--line);
+border-radius:16px;
+padding:24px;
+margin-top:20px;
+}
+.stats{
+display:flex;
+gap:12px;
+margin-bottom:20px;
+}
+.stat{
+flex:1;
+background:#0b1220;
+padding:15px;
+border-radius:10px;
+text-align:center;
+}
+.value{
+font-size:30px;
+font-weight:bold;
+}
+button{
+width:100%;
+padding:14px;
+border:none;
+border-radius:10px;
+cursor:pointer;
+font-size:16px;
+font-weight:bold;
+margin-top:10px;
+}
+.primary{
+background:var(--accent);
+}
+.cta{
+display:block;
+margin-top:20px;
+text-align:center;
+padding:15px;
+background:#facc15;
+color:#000;
+text-decoration:none;
+font-weight:bold;
+border-radius:10px;
+}
+footer{
+margin-top:30px;
+font-size:12px;
+color:var(--muted);
+text-align:center;
+max-width:600px;
+}
+</style>
+</head>
+<body>
+
+<h1>🎥 Screen Studio Creator Streak</h1>
+<p>Track your recording consistency and stay productive.</p>
+
+<div class="card">
+<div class="stats">
+<div class="stat">
+<div>🔥 Streak</div>
+<div class="value" id="streak">0</div>
+</div>
+<div class="stat">
+<div>🎬 Videos</div>
+<div class="value" id="videos">0</div>
+</div>
+</div>
+
+<button class="primary" id="recordBtn">Recorded Today</button>
+<button id="resetBtn">Reset Progress</button>
+</div>
+
+<a class="cta" href="https://tinyurl.com/wbr8mmyr" target="_blank" rel="noopener sponsored">
+🎁 Get Screen Studio - Save 70% With Annual Billing
+</a>
+
+<footer>
+This page contains an affiliate link. We may earn a commission at no extra cost to you.
+Not affiliated with or endorsed by Screen Studio.
+</footer>
+
+<script>
+let streak=parseInt(localStorage.getItem("ss_streak")||"0");
+let videos=parseInt(localStorage.getItem("ss_videos")||"0");
+let last=localStorage.getItem("ss_last")||"";
+
+function render(){
+document.getElementById("streak").textContent=streak;
+document.getElementById("videos").textContent=videos;
+}
+
+document.getElementById("recordBtn").addEventListener("click",()=>{
+const today=new Date().toDateString();
+
+if(last!==today){
+if(last){
+const diff=(new Date(today)-new Date(last))/86400000;
+if(diff===1){streak++;}
+else{streak=1;}
+}else{
+streak=1;
+}
+videos++;
+last=today;
+
+localStorage.setItem("ss_streak",streak);
+localStorage.setItem("ss_videos",videos);
+localStorage.setItem("ss_last",last);
+render();
+}
+});
+
+document.getElementById("resetBtn").addEventListener("click",()=>{
+if(confirm("Reset progress?")){
+localStorage.clear();
+streak=0;
+videos=0;
+last="";
+render();
+}
+});
+
+render();
+</script>
+
+</body>
+</html>
